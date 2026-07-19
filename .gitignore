@@ -1,0 +1,14 @@
+# Virtual environment local dependencies
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Local runtime database files
+*.db
+system.db
+
+# Generated export files from tests
+export_*.csv
+export_*.xlsx
+report_*.pdf

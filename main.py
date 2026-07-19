@@ -70,7 +70,6 @@ def import_medicines(file: UploadFile = File(...), db: Session = Depends(get_db)
 def import_customers(file: UploadFile = File(...), db: Session = Depends(get_db)):
     records = bulk_csv_importer(file, {"name", "phone", "email"})
     for row in records:
-        # Check for unique email violations to prevent duplicate data corruption
         if not db.query(CustomerModel).filter(CustomerModel.email == row['email']).first():
             db.add(CustomerModel(name=row['name'], phone=str(row['phone']), email=row['email']))
     db.commit()
@@ -79,7 +78,6 @@ def import_customers(file: UploadFile = File(...), db: Session = Depends(get_db)
 
 @app.get("/api/export/{entity}", tags=["Export"])
 def export_tabular_data(entity: str, format: str, db: Session = Depends(get_db)):
-    # Dynamic table resolver mapping
     model_map = {"medicines": MedicineModel, "customers": CustomerModel, "suppliers": SupplierModel}
     if entity not in model_map:
         raise HTTPException(status_code=404, detail="Requested entity does not exist.")
